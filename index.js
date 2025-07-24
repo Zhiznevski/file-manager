@@ -16,6 +16,12 @@ import { renameFile } from "./commands/fs/renameFile.js";
 import { copyFile } from "./commands/fs/copyFile.js";
 import { moveFile } from "./commands/fs/moveFile.js";
 import { deleteFile } from "./commands/fs/deleteFile.js";
+import { osCommands } from "./consts/osCommands.js";
+import { printEOL } from "./commands/os/printEOL.js";
+import { printCPUsInfo } from "./commands/os/printCPUsInfo.js";
+import { printHomeDirectory } from "./commands/os/printHomeDirectory.js";
+import { printSystemUserName } from "./commands/os/printSystemUserName.js";
+import { printArchitecture } from "./commands/os/printArchitecture.js";
 
 const startApp = async () =>  {
 
@@ -62,6 +68,24 @@ const startApp = async () =>  {
             case fsCommands.deleteFile:
                 deleteFile(args[0])
                 break;
+            case "os":
+                switch (args[0]) {
+                    case osCommands.getEOL:
+                        printEOL()
+                        break;
+                    case osCommands.getCpus:
+                        printCPUsInfo()
+                        break;
+                    case osCommands.getHomeDirectory:
+                        printHomeDirectory()
+                        break;
+                    case osCommands.getSystemUserName:
+                        printSystemUserName()
+                        break;
+                    case osCommands.getArchitecture:
+                        printArchitecture()
+                        break;
+                }
         }
         
         if (command == ".exit") { //TODO: Need to create object with all commands to remove these strings
