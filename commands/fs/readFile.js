@@ -5,7 +5,6 @@ export const readFile = async (filePath) => {
     try {
         createReadStream(filePath).pipe(process.stdout)
     } catch (err) {
-        console.log(err)
         console.log(operationFailed)
     }
     }
