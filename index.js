@@ -22,6 +22,11 @@ import { printCPUsInfo } from "./commands/os/printCPUsInfo.js";
 import { printHomeDirectory } from "./commands/os/printHomeDirectory.js";
 import { printSystemUserName } from "./commands/os/printSystemUserName.js";
 import { printArchitecture } from "./commands/os/printArchitecture.js";
+import { hashCommands } from "./consts/hashCommands.js";
+import { calculateHash } from "./commands/hash/calculateHash.js";
+import { zipCommands } from "./consts/zipCommands.js";
+import { compressFile } from "./commands/zip/compress.js";
+import { decompressFile } from "./commands/zip/decompress.js";
 
 const startApp = async () =>  {
 
@@ -86,6 +91,15 @@ const startApp = async () =>  {
                         printArchitecture()
                         break;
                 }
+            case hashCommands.calculateHash:
+                calculateHash(args[0])
+                break;
+            case zipCommands.compressFile:
+                compressFile(args[0], args[1])
+                break;
+            case zipCommands.decompressFile:
+                decompressFile(args[0], args[1])
+                break;    
         }
         
         if (command == ".exit") { //TODO: Need to create object with all commands to remove these strings
