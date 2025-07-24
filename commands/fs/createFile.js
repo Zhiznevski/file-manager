@@ -8,7 +8,6 @@ export const createFile = async (fileName) => {
     const path = join(getCurrentDirectory(), fileName)
     try {
         await writeFile(path, '', { flag: "wx"})
-
     } catch (err) {
         console.log(operationFailed)
     }

@@ -27,12 +27,16 @@ import { calculateHash } from "./commands/hash/calculateHash.js";
 import { zipCommands } from "./consts/zipCommands.js";
 import { compressFile } from "./commands/zip/compress.js";
 import { decompressFile } from "./commands/zip/decompress.js";
+import { invalidInput } from "./consts/errorMessages.js";
+import { generalCommands } from "./consts/generalCommands.js";
+import { exit, stdin, stdout } from "node:process";
+import { commandDecorator } from "./utils/commandDecorator.js";
 
 const startApp = async () =>  {
 
     const userName = getUserName()
 
-    const rl = createInterface({input: process.stdin, output: process.stdout})
+    const rl = createInterface({input: stdin, output: stdout})
 
     rl.write(getGreetingMessage(userName))
 
@@ -43,79 +47,79 @@ const startApp = async () =>  {
         const { command, args } = handleUserInput(data)
 
         switch ( command ) {
-            case navigationCommands.up: 
-                up();
+            case navigationCommands.upperDirectory: 
+                commandDecorator(up)
                 break;
             case navigationCommands.changeDirectory:
-                cd(command);
+                commandDecorator(cd, args[0])
                 break;
             case navigationCommands.fileList:
-                ls();
+                commandDecorator(ls)
                 break;
             case fsCommands.readFile:
-                readFile(args[0]);
+                commandDecorator(readFile, args[0])
                 break;
             case fsCommands.createFile:
-                createFile(args[0])
+                commandDecorator(createFile, args[0])
                 break;
             case fsCommands.createDirectory:
-                createDirectory(args[0])
+                commandDecorator(createDirectory, args[0])
                 break;
             case fsCommands.renameFile:
-                renameFile(args[0], args[1])
+                commandDecorator(renameFile, args[0], args[1])
                 break;
             case fsCommands.copyFile:
-                copyFile(args[0], args[1])
+                commandDecorator(copyFile, args[0], args[1])
                 break;
             case fsCommands.moveFile:
-                moveFile(args[0], args[1])
+                commandDecorator(moveFile, args[0], args[1])
                 break;
             case fsCommands.deleteFile:
-                deleteFile(args[0])
+                commandDecorator(deleteFile, args[0])
                 break;
             case "os":
                 switch (args[0]) {
                     case osCommands.getEOL:
-                        printEOL()
+                        commandDecorator(printEOL)
                         break;
                     case osCommands.getCpus:
-                        printCPUsInfo()
+                        commandDecorator(printCPUsInfo)
                         break;
                     case osCommands.getHomeDirectory:
-                        printHomeDirectory()
+                        commandDecorator(printHomeDirectory)
                         break;
                     case osCommands.getSystemUserName:
-                        printSystemUserName()
+                        commandDecorator(printSystemUserName)
                         break;
                     case osCommands.getArchitecture:
-                        printArchitecture()
+                        commandDecorator(printArchitecture)
                         break;
+                    default:
+                        process.stdout.write(invalidInput + '\n')
                 }
+                break;     
             case hashCommands.calculateHash:
-                calculateHash(args[0])
+                commandDecorator(calculateHash, args[0])
                 break;
             case zipCommands.compressFile:
-                compressFile(args[0], args[1])
+                commandDecorator(compressFile, args[0], args[1])
                 break;
             case zipCommands.decompressFile:
-                decompressFile(args[0], args[1])
+                commandDecorator(decompressFile, args[0], args[1])
                 break;    
+
+            case generalCommands.exit:
+                rl.close()
+                return;
+            
+            default:
+                process.stdout.write(invalidInput + '\n')
+                break;
         }
-        
-        if (command == ".exit") { //TODO: Need to create object with all commands to remove these strings
-            rl.close()
-            return;
-        }
-
-        // else {
-        //     console.log(invalidInput) //TODO:  need to handle this 
-        // }
-    })
-
-    rl.on("close", () => {
-        console.log(getGoodByeMessage(userName))
-    })
-
+    }).on('close', () => {
+    console.log(getGoodByeMessage(userName))
+    exit(0);
+});
 }
 
 startApp()

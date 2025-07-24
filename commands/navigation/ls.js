@@ -1,8 +1,6 @@
 import { readdir } from "node:fs/promises"
-import { getCurrentDirectoryMessage } from '../../utils/getCurrentDirectoryMessage.js';
 import { getCurrentDirectory } from '../../utils/getCurrentDirectory.js';
 import { operationFailed } from '../../consts/errorMessages.js';
-import { type } from "node:os";
 
 const listItemTypes = {
     directory: "directory",
@@ -33,7 +31,6 @@ try {
         return -1;
     }
    }))
-  console.log(getCurrentDirectoryMessage(getCurrentDirectory()));
 } catch (err) {
   console.log(operationFailed)
 }}
